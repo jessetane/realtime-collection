@@ -1,8 +1,10 @@
 var EventEmitter = require('events')
 
-module.exports = class Collection extends EventEmitter {
+module.exports = class extends EventEmitter {
   constructor (opts) {
     super(this)
+    this._onchange = this._onchange.bind(this)
+    this._onremove = this._onremove.bind(this)
     this.storage = opts.storage
     this.orderBy = opts.orderBy
     this.where = opts.where
@@ -44,7 +46,7 @@ module.exports = class Collection extends EventEmitter {
     this._ref.off('child_removed', this._onremove)
   }
 
-  _onchange = (snap, old) => {
+  _onchange (snap, old) {
     var key = snap.key
     var oldData = old ? old.val() : null
     var newData = snap.val()
@@ -56,7 +58,7 @@ module.exports = class Collection extends EventEmitter {
     })
   }
 
-  _onremove = snap => {
+  _onremove (snap) {
     var key = snap.key
     var oldData = snap.val()
     delete this.items[key]
