@@ -2,7 +2,7 @@ var EventEmitter = require('events')
 
 module.exports = class extends EventEmitter {
   constructor (opts) {
-    super(this)
+    super()
     this._onchange = this._onchange.bind(this)
     this._onremove = this._onremove.bind(this)
     this.storage = opts.storage
