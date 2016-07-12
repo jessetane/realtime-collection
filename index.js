@@ -5,6 +5,7 @@ module.exports = class extends EventEmitter {
     super()
     this._onchange = this._onchange.bind(this)
     this._onremove = this._onremove.bind(this)
+    this.parseKey = opts.parseKey || this.parseKey
     this.storage = opts.storage
     this.orderBy = opts.orderBy
     this.where = opts.where
@@ -46,9 +47,13 @@ module.exports = class extends EventEmitter {
     this._ref.off('child_removed', this._onremove)
   }
 
-  _onchange (snap, old) {
-    var key = snap.key
-    var oldData = old ? old.val() : null
+  parseKey (key) {
+    return key
+  }
+
+  _onchange (snap) {
+    var key = this.parseKey(snap.key)
+    var oldData = this.items[key]
     var newData = snap.val()
     this.items[key] = newData
     this.emit('change', {
@@ -59,7 +64,7 @@ module.exports = class extends EventEmitter {
   }
 
   _onremove (snap) {
-    var key = snap.key
+    var key = this.parseKey(snap.key)
     var oldData = snap.val()
     delete this.items[key]
     this.emit('change', {
