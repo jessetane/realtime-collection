@@ -2,6 +2,9 @@
   "name": "realtime-collection",
   "version": "1.2.0",
   "description": "Collection helper for working with firebase",
+  "dependencies": {
+    "inherits": "^2.0.1"
+  },
   "repository": "https://github.com/jessetane/realtime-collection",
   "author": "jesse.tane@gmail.com",
   "license": "MIT"
