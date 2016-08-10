@@ -5,6 +5,7 @@ module.exports = class extends EventEmitter {
     super()
     this._onchange = this._onchange.bind(this)
     this._onremove = this._onremove.bind(this)
+    this._onerror = this._onerror.bind(this)
     this.parseKey = opts.parseKey || this.parseKey
     this.storage = opts.storage
     this.orderBy = opts.orderBy
@@ -33,18 +34,18 @@ module.exports = class extends EventEmitter {
         .equalTo(where)
     }
 
-    this._ref.on('child_added', this._onchange)
-    this._ref.on('child_changed', this._onchange)
-    this._ref.on('child_removed', this._onremove)
+    this._ref.on('child_added', this._onchange, this._onerror)
+    this._ref.on('child_changed', this._onchange, this._onerror)
+    this._ref.on('child_removed', this._onremove, this._onerror)
   }
 
   unwatch () {
     if (!this.watching) return
     this.watching = false
 
-    this._ref.off('child_added', this._onchange)
-    this._ref.off('child_changed', this._onchange)
-    this._ref.off('child_removed', this._onremove)
+    this._ref.off('child_added', this._onchange, this._onerror)
+    this._ref.off('child_changed', this._onchange, this._onerror)
+    this._ref.off('child_removed', this._onremove, this._onerror)
   }
 
   parseKey (key) {
@@ -72,5 +73,9 @@ module.exports = class extends EventEmitter {
       oldData, 
       newData: null,
     })
+  }
+
+  _onerror (err) {
+    this.emit('error', err)
   }
 }
