@@ -47,9 +47,9 @@ RealtimeCollection.prototype.unwatch = function () {
   if (!this.watching) return
   this.watching = false
 
-  this._ref.off('child_added', this._onchange, this._onerror)
-  this._ref.off('child_changed', this._onchange, this._onerror)
-  this._ref.off('child_removed', this._onremove, this._onerror)
+  this._ref.off('child_added', this._onchange)
+  this._ref.off('child_changed', this._onchange)
+  this._ref.off('child_removed', this._onremove)
 }
 
 RealtimeCollection.prototype.parseKey = function (key) {
